@@ -2,16 +2,23 @@ package ru.richie.controller;
 
 import lombok.RequiredArgsConstructor;
 import ru.richie.model.Label;
-import ru.richie.repositories.LabelRepo;
+import ru.richie.model.Status;
+import ru.richie.repository.LabelRepo;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class LabelController {
     private final LabelRepo labelRepo;
 
+    public LabelController(LabelRepo labelRepo) {
+        this.labelRepo = labelRepo;
+    }
+
     public Label addLabel(String name) {
-        Label label = Label.builder().name(name).build();
+        Label label = Label.builder().name(name)
+                .status(Status.ACTIVE)
+                .build();
         labelRepo.add(label);
         return label;
     }

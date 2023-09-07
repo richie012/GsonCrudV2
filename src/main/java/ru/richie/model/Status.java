@@ -1,4 +1,4 @@
-package ru.richie.enums;
+package ru.richie.model;
 
 public enum Status {
     ACTIVE,

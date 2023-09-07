@@ -3,12 +3,15 @@ package ru.richie.controller;
 import lombok.RequiredArgsConstructor;
 import ru.richie.model.Label;
 import ru.richie.model.Post;
-import ru.richie.repositories.PostRepo;
+import ru.richie.repository.PostRepo;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 public class PostController {
+    public PostController(PostRepo postRepo) {
+        this.postRepo = postRepo;
+    }
+
     private final PostRepo postRepo;
 
     public Post addPost(String content, List<Label> labels){

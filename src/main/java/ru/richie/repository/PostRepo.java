@@ -1,4 +1,4 @@
-package ru.richie.repositories;
+package ru.richie.repository;
 
 import ru.richie.model.Post;
 

@@ -6,10 +6,15 @@ import ru.richie.model.Label;
 
 import java.util.List;
 import java.util.Scanner;
-@RequiredArgsConstructor
+
 public class LabelView {
     private final LabelController labelController;
     private final Scanner scanner;
+
+    public LabelView(LabelController labelController, Scanner scanner) {
+        this.labelController = labelController;
+        this.scanner = scanner;
+    }
 
     public void run() {
         boolean running = true;

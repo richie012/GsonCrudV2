@@ -1,9 +1,9 @@
-package ru.richie.repositories;
+package ru.richie.repository;
 
 import java.util.List;
 
 public interface GenericRepo<T,ID>{
-    boolean add(T t);
+    T add(T t);
 
     T getById(ID id);
 

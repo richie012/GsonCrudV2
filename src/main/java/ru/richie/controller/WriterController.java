@@ -1,15 +1,17 @@
 package ru.richie.controller;
 
-import lombok.RequiredArgsConstructor;
-import ru.richie.model.Label;
 import ru.richie.model.Post;
 import ru.richie.model.Writer;
-import ru.richie.repositories.WriterRepo;
+import ru.richie.repository.WriterRepo;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class WriterController {
+    public WriterController(WriterRepo writerRepo) {
+        this.writerRepo = writerRepo;
+    }
+
     private final WriterRepo writerRepo;
 
     public Writer addWriter(String firstName, String lastName, List<Post> posts){

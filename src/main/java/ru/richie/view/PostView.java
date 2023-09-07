@@ -9,11 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@RequiredArgsConstructor
 
 public class PostView {
     private final PostController postController;
     private final Scanner scanner;
+
+    public PostView(PostController postController, Scanner scanner) {
+        this.postController = postController;
+        this.scanner = scanner;
+    }
 
     public void run() {
         boolean running = true;

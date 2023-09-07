@@ -1,12 +1,10 @@
-package ru.richie.repositories.json;
+package ru.richie.repository.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ru.richie.enums.PostStatus;
-import ru.richie.enums.Status;
-import ru.richie.model.Label;
+import ru.richie.model.PostStatus;
 import ru.richie.model.Post;
-import ru.richie.repositories.PostRepo;
+import ru.richie.repository.PostRepo;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -23,46 +21,12 @@ public class PostRepositoryImp implements PostRepo {
     private static final String FILE_PATH = "src/main/resources/post.json";
     private final Gson GSON = new Gson();
 
-    public boolean addPosts(List<Post> posts) {
-        List<Post> currentPosts = getAll();
-        try (java.io.Writer fileWriter = new FileWriter(FILE_PATH)) {
-
-            currentPosts.addAll(posts);
-            GSON.toJson(currentPosts, fileWriter);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean add(Post post) {
-        List<Post> currentPosts = getAll();
-        try (java.io.Writer fileWriter = new FileWriter(FILE_PATH)) {
-            if (post.getId() != null) {
-                post.setId(getNextId());
-            }
-
-            currentPosts.add(post);
-            GSON.toJson(currentPosts, fileWriter);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public Post getById(Long id) {
-        return getAll()
-                .stream()
-                .filter(p -> p.getId().equals(id))
-                .filter(p -> p.getStatus().equals(PostStatus.DELETED))
-                .findFirst()
-                .orElse(new Post(getNextId()));
-    }
-
     @Override
     public List<Post> getAll() {
+        return getPosts();
+    }
+
+    private List<Post> getPosts() {
         try (Reader fileRider = new FileReader(FILE_PATH)) {
             Type type = new TypeToken<List<Post>>() {
             }.getType();
@@ -75,6 +39,40 @@ public class PostRepositoryImp implements PostRepo {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public Post add(Post post) {
+        List<Post> currentPosts = getAll();
+
+        if (post.getId() != null) {
+            post.setId(getNextId());
+        }
+
+        currentPosts.add(post);
+        addPosts(currentPosts);
+        return post;
+
+    }
+
+    private void addPosts(List<Post> posts) {
+        List<Post> currentPosts = getAll();
+        try (java.io.Writer fileWriter = new FileWriter(FILE_PATH)) {
+            GSON.toJson(currentPosts, fileWriter);
+        } catch (Exception e) {
+        }
+    }
+
+
+    @Override
+    public Post getById(Long id) {
+        return getAll()
+                .stream()
+                .filter(p -> p.getId().equals(id))
+                .filter(p -> p.getStatus().equals(PostStatus.DELETED))
+                .findFirst()
+                .orElse(new Post(getNextId()));
+    }
+
 
     @Override
     public Post update(Post updatedPost) {
@@ -98,22 +96,15 @@ public class PostRepositoryImp implements PostRepo {
     @Override
     public boolean deleteById(Long id) {
         List<Post> currentPosts = getAll();
-        try (java.io.Writer fileWriter = new FileWriter(FILE_PATH)) {
-
-            List<Post> updatedPosts = currentPosts
-                    .stream()
-                    .peek(l -> {
-                        if (l.getId().equals(id)) {
-                            l.setStatus(PostStatus.DELETED);
-                        }
-                    }).toList();
-
-            GSON.toJson(updatedPosts, fileWriter);
-            return true;
-
-        } catch (IOException e) {
-            return false;
-        }
+        List<Post> updatedPosts = currentPosts
+                .stream()
+                .peek(l -> {
+                    if (l.getId().equals(id)) {
+                        l.setStatus(PostStatus.DELETED);
+                    }
+                }).toList();
+        addPosts(updatedPosts);
+        return true;
     }
 
     private Long getNextId() {

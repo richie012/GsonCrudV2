@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@RequiredArgsConstructor
 public class WriterView {
     private final WriterController writerController;
     private final Scanner scanner;
+
+    public WriterView(WriterController writerController, Scanner scanner) {
+        this.writerController = writerController;
+        this.scanner = scanner;
+    }
 
     public void run(){
         boolean running = true;
